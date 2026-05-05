@@ -1,12 +1,13 @@
+<template>
+  <div>
+    <h1>Antispreco – Annunci</h1>
+
+    <!-- Qui verranno caricate le pagine del router -->
+    <router-view />
+  </div>
+</template>
+
 <script setup>
-import ListaAnnunci from "./components/ListaAnnunci.vue";
-import FormAnnuncio from "./components/FormAnnuncio.vue";
 </script>
 
-<template>
-  <h1>Antispreco – Annunci</h1>
-
-  <FormAnnuncio />
-  <ListaAnnunci />
-</template>
 
