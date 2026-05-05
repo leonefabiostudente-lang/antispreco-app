@@ -1,80 +1,66 @@
-<script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
-const nome = ref("");
-const email = ref("");
-const password = ref("");
-const tipo = ref("privato"); // default
-
-const errore = ref("");
-
-async function registra() {
-  errore.value = "";
-
-  const res = await fetch("https://antispreco-app-2.onrender.com/api/auth/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nome: nome.value,
-      email: email.value,
-      password: password.value,
-      tipo: tipo.value
-    })
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    errore.value = data.error || "Errore durante la registrazione";
-    return;
-  }
-
-  alert("Registrazione completata!");
-  router.push("/login");
-}
-</script>
-
 <template>
-  <div class="form-container">
-    <h2>Registrazione</h2>
+  <div>
+    <h2 class="page-title">Registrazione</h2>
 
-    <p v-if="errore" class="errore">{{ errore }}</p>
+    <form class="form-box" @submit.prevent="register">
+      <input
+        type="text"
+        v-model="nome"
+        placeholder="Nome"
+        required
+      />
 
-    <form @submit.prevent="registra">
-      <label>Nome</label>
-      <input v-model="nome" type="text" required />
+      <input
+        type="email"
+        v-model="email"
+        placeholder="Email"
+        required
+      />
 
-      <label>Email</label>
-      <input v-model="email" type="email" required />
+      <input
+        type="password"
+        v-model="password"
+        placeholder="Password"
+        required
+      />
 
-      <label>Password</label>
-      <input v-model="password" type="password" required />
-
-      <label>Tipo utente</label>
-      <select v-model="tipo">
-        <option value="privato">Privato</option>
-        <option value="negozio">Negozio</option>
-        <option value="associazione">Associazione</option>
-      </select>
-
-      <button type="submit">Registrati</button>
+      <button>Registrati</button>
     </form>
   </div>
 </template>
 
-<style>
-.form-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 6px;
+<script setup>
+import { ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+
+const nome = ref("");
+const email = ref("");
+const password = ref("");
+const router = useRouter();
+
+async function register() {
+  try {
+    await axios.post(
+      "https://antispreco-app-2.onrender.com/api/register",
+      {
+        nome: nome.value,
+        email: email.value,
+        password: password.value,
+      }
+    );
+
+    alert("Registrazione completata");
+    router.push("/login");
+  } catch (err) {
+    alert("Errore nella registrazione");
+  }
 }
-.errore {
-  color: red;
-  margin-bottom: 10px;
-}
+</script>
+
+<style scoped>
+/* Lo stile principale è già in App.vue */
+/* Qui puoi aggiungere personalizzazioni se vuoi */
 </style>
+
+

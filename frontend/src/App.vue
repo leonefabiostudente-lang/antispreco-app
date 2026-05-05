@@ -1,20 +1,19 @@
 <template>
   <div class="app-container">
+
     <nav class="navbar">
-      <button class="dark-toggle" @click="toggleDarkMode">
-  🌙
-</button>
-
       <h1 class="logo">
-  <span class="leaf">🍃</span> Antispreco
-</h1>
-
+        <span class="leaf">🍃</span> Antispreco
+      </h1>
 
       <div class="nav-links">
         <router-link to="/">Home</router-link>
+        <router-link to="/annunci">Annunci</router-link>
+        <router-link to="/nuovo-annuncio">Nuovo annuncio</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/register">Registrati</router-link>
-        <router-link to="/nuovo-annuncio">Nuovo annuncio</router-link>
+
+        <button class="dark-toggle" @click="toggleDarkMode">🌙</button>
       </div>
     </nav>
 
@@ -25,8 +24,10 @@
     <footer class="footer">
       © 2024 Antispreco – Progetto scolastico
     </footer>
+
   </div>
 </template>
+
 <script setup>
 import { ref } from "vue";
 
@@ -38,10 +39,7 @@ function toggleDarkMode() {
 }
 </script>
 
-
-
 <style>
-/* PALETTE COLORI */
 :root {
   --primary: #2ecc71;
   --primary-dark: #27ae60;
@@ -49,7 +47,6 @@ function toggleDarkMode() {
   --text: #333;
 }
 
-/* STRUTTURA GENERALE */
 body {
   background: var(--bg);
   color: var(--text);
@@ -58,13 +55,31 @@ body {
   padding: 0;
 }
 
+body.dark-mode {
+  background: #1e1e1e;
+  color: #eee;
+}
+
+body.dark-mode .navbar {
+  background: #111;
+}
+
+body.dark-mode .card {
+  background: #2a2a2a;
+  color: #eee;
+}
+
+body.dark-mode .footer {
+  background: #111;
+  color: #aaa;
+}
+
 .app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* NAVBAR */
 .navbar {
   background: var(--primary);
   padding: 15px 25px;
@@ -75,6 +90,17 @@ body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leaf {
+  font-size: 26px;
+}
 
 .nav-links a {
   color: white;
@@ -87,13 +113,19 @@ body {
   text-decoration: underline;
 }
 
-/* CONTENUTO */
+.dark-toggle {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
 .content {
   flex: 1;
   padding: 20px;
 }
 
-/* FOOTER */
 .footer {
   text-align: center;
   padding: 15px;
@@ -102,6 +134,7 @@ body {
   margin-top: 20px;
   font-size: 14px;
 }
+
 /* CARD GENERICA */
 .card {
   background: white;
@@ -148,46 +181,4 @@ body {
 .form-box button:hover {
   background: var(--primary-dark);
 }
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.leaf {
-  font-size: 26px;
-}
-.dark-toggle {
-  background: transparent;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  margin-left: 15px;
-}
-
-body.dark-mode {
-  background: #1e1e1e;
-  color: #eee;
-}
-
-body.dark-mode .navbar {
-  background: #111;
-}
-
-body.dark-mode .card {
-  background: #2a2a2a;
-  color: #eee;
-}
-
-body.dark-mode .footer {
-  background: #111;
-  color: #aaa;
-}
-
-
 </style>
-
-
-

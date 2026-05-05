@@ -1,68 +1,58 @@
-<script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
-const email = ref("");
-const password = ref("");
-const errore = ref("");
-
-async function login() {
-  errore.value = "";
-
-  const res = await fetch("https://antispreco-app-2.onrender.com/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    errore.value = data.error || "Credenziali non valide";
-    return;
-  }
-
-  // Salvo il token
-  localStorage.setItem("token", data.token);
-
-  alert("Login effettuato!");
-  router.push("/"); // torna alla home o dove vuoi
-}
-</script>
-
 <template>
-  <div class="form-container">
-    <h2>Login</h2>
+  <div>
+    <h2 class="page-title">Login</h2>
 
-    <p v-if="errore" class="errore">{{ errore }}</p>
+    <form class="form-box" @submit.prevent="login">
+      <input
+        type="email"
+        v-model="email"
+        placeholder="Email"
+        required
+      />
 
-    <form @submit.prevent="login">
-      <label>Email</label>
-      <input v-model="email" type="email" required />
+      <input
+        type="password"
+        v-model="password"
+        placeholder="Password"
+        required
+      />
 
-      <label>Password</label>
-      <input v-model="password" type="password" required />
-
-      <button type="submit">Accedi</button>
+      <button>Accedi</button>
     </form>
   </div>
 </template>
 
-<style>
-.form-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 6px;
+<script setup>
+import { ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+
+const email = ref("");
+const password = ref("");
+const router = useRouter();
+
+async function login() {
+  try {
+    const res = await axios.post(
+      "https://antispreco-app-2.onrender.com/api/login",
+      {
+        email: email.value,
+        password: password.value,
+      }
+    );
+
+    localStorage.setItem("token", res.data.token);
+
+    router.push("/annunci");
+  } catch (err) {
+    alert("Credenziali non valide");
+  }
 }
-.errore {
-  color: red;
-  margin-bottom: 10px;
-}
+</script>
+
+<style scoped>
+/* Lo stile principale è già in App.vue */
+/* Qui aggiungo solo eventuali personalizzazioni */
+
 </style>
+

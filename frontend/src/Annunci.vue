@@ -6,7 +6,6 @@
       <div v-for="a in annunci" :key="a._id" class="card annuncio-card">
         <h3>{{ a.titolo }}</h3>
         <p>{{ a.descrizione }}</p>
-
         <span class="categoria-tag">{{ a.categoria }}</span>
       </div>
     </div>
@@ -52,4 +51,6 @@ onMounted(async () => {
   margin-top: 10px;
 }
 </style>
+
+
 
