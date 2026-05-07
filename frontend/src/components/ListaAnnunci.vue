@@ -34,31 +34,30 @@ watch(filtroZona, () => {
 });
 </script>
 
-
 <template>
   <input 
-  v-model="filtroZona"
-  type="text"
-  placeholder="Cerca per zona (es. Sarnico, Predore...)"
-  class="search-input"
-/>
+    v-model="filtroZona"
+    type="text"
+    placeholder="Cerca per zona (es. Sarnico, Predore...)"
+    class="search-input"
+  />
 
-  <div>
-    <h2>Annunci disponibili</h2>
+  <h2>Annunci disponibili</h2>
 
-    <!-- Stato di caricamento -->
-    <div v-if="loading">Caricamento in corso...</div>
+  <!-- Stato di caricamento -->
+  <div v-if="loading">Caricamento in corso...</div>
 
-    <!-- Errore -->
-    <div v-if="errore">{{ errore }}</div>
+  <!-- Errore -->
+  <div v-if="errore">{{ errore }}</div>
 
-    <!-- Nessun annuncio -->
-    <div v-if="!loading && annunci.length === 0">
-      Nessun annuncio presente.
-    </div>
+  <!-- Nessun annuncio -->
+  <div v-if="!loading && annunci.length === 0">
+    Nessun annuncio presente.
+  </div>
 
-    <!-- Lista annunci -->
-    <div v-for="a in annunci" :key="a._id" class="annuncio">
+  <!-- GRIGLIA ANNUNCI -->
+  <div class="annunci-grid">
+    <div v-for="a in annunci" :key="a._id" class="annuncio-card">
       <h3>{{ a.titolo }}</h3>
       <p>{{ a.descrizione }}</p>
 
@@ -85,19 +84,12 @@ watch(filtroZona, () => {
         <strong>Telefono:</strong>
         {{ a.telefono_utente || "Non disponibile" }}
       </p>
-
-      <hr>
     </div>
   </div>
 </template>
 
 <style>
-.annuncio {
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-}
+/* Input ricerca */
 .search-input {
   width: 100%;
   padding: 10px;
@@ -107,5 +99,35 @@ watch(filtroZona, () => {
   font-size: 16px;
 }
 
-</style>
+/* GRIGLIA */
+.annunci-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
 
+/* CARD ANNUNCIO */
+.annuncio-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.annuncio-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.annuncio-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.annuncio-card p {
+  margin: 5px 0;
+  color: #444;
+}
+</style>
