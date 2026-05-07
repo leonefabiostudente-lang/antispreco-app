@@ -1,51 +1,62 @@
 import mongoose from "mongoose";
 import bcryptjs from "bcryptjs";
 
-const utenteSchema = new mongoose.Schema(
-  {
-    nome: { type: String, required: true, trim: true },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      match: [/.+\@.+\..+/, 'Email non valida'],
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 6,
-      select: false,
-    },
-    telefono: String,
-    tipo: {
-      type: String,
-      enum: ['privato', 'negozio', 'associazione'],
-      default: 'privato',
-    },
-    zona: String,
-    indirizzo: String,
-    foto_profilo: String,
-    bio: { type: String, maxlength: 500 },
-    rating: { type: Number, default: 5, min: 1, max: 5 },
-    numero_annunci: { type: Number, default: 0 },
-    creato_il: { type: Date, default: Date.now },
+const UtenteSchema = new mongoose.Schema({
+  // Tipo utente: privato, associazione, commerciante
+  tipo: {
+    type: String,
+    enum: ["privato", "associazione", "commerciante"],
+    required: true
   },
-  { timestamps: true }
-);
 
-// Hash password prima del salvataggio
-utenteSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  const salt = await bcryptjs.genSalt(10);
-  this.password = await bcryptjs.hash(this.password, salt);
+  /* ============================
+     PRIVATO
+  ============================ */
+  nome: { type: String },
+  cognome: { type: String },
+
+  /* ============================
+     ASSOCIAZIONE
+  ============================ */
+  nome_associazione: { type: String },
+  partita_iva: { type: String },
+
+  /* ============================
+     COMMERCIANTE
+  ============================ */
+  nome_attivita: { type: String },
+  categoria_attivita: { type: String },
+
+  /* ============================
+     DATI COMUNI
+  ============================ */
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+
+  password: {
+    type: String,
+    required: true,
+    select: false // non viene restituita nelle query
+  }
+});
+
+/* ============================
+   HASH PASSWORD PRIMA DEL SALVATAGGIO
+============================ */
+UtenteSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcryptjs.hash(this.password, 10);
   next();
 });
 
-// Metodo per confrontare password
-utenteSchema.methods.compara_password = function (passwordInserita) {
+/* ============================
+   METODO PER CONFRONTARE PASSWORD
+============================ */
+UtenteSchema.methods.compara_password = async function (passwordInserita) {
   return bcryptjs.compare(passwordInserita, this.password);
 };
 
-const Utente = mongoose.model('Utente', utenteSchema);
-export default Utente;
+export default mongoose.model("Utente", UtenteSchema);
