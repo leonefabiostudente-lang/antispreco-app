@@ -1,31 +1,37 @@
 <template>
-  <div>
-    <h2 class="page-title">Login</h2>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
 
-    <form class="form-box" @submit.prevent="login">
-      <input
-        type="email"
-        v-model="email"
-        placeholder="Email"
-        required
-      />
+        <h2 class="text-center mb-4">Accedi</h2>
 
-      <input
-        type="password"
-        v-model="password"
-        placeholder="Password"
-        required
-      />
+        <div class="card shadow-sm p-4">
 
-      <button>Accedi</button>
-    </form>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input v-model="email" type="email" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input v-model="password" type="password" class="form-control">
+          </div>
+
+          <button @click="login" class="btn btn-primary w-100">
+            Accedi
+          </button>
+
+        </div>
+
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
 import { useRouter } from "vue-router";
+import { loginUser } from "../services/authService";
 
 const email = ref("");
 const password = ref("");
@@ -33,26 +39,23 @@ const router = useRouter();
 
 async function login() {
   try {
-    const res = await axios.post(
-      "https://antispreco-app-2.onrender.com/api/login",
-      {
-        email: email.value,
-        password: password.value,
-      }
-    );
+    const res = await loginUser(email.value, password.value);
 
     localStorage.setItem("token", res.data.token);
-
     router.push("/annunci");
+
   } catch (err) {
+    console.error(err);
     alert("Credenziali non valide");
   }
 }
 </script>
+
+
+
 
 <style scoped>
 /* Lo stile principale è già in App.vue */
 /* Qui aggiungo solo eventuali personalizzazioni */
 
 </style>
-

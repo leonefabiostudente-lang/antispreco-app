@@ -7,6 +7,7 @@ import Register from "../views/Register.vue";
 
 const routes = [
   { path: "/", component: ListaAnnunci },
+  { path: "/annunci", component: ListaAnnunci },   // <-- OK, NON serve re-importare
   { path: "/nuovo-annuncio", component: FormAnnuncio },
   { path: "/login", component: Login },
   { path: "/register", component: Register }
@@ -16,4 +17,3 @@ export default createRouter({
   history: createWebHistory(),
   routes
 });
-
