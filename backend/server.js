@@ -17,9 +17,13 @@ import annunciRouter from "./routes/annunci.js";
 
 const app = express();
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://antispreco-app.vercel.app"
+  ],
   credentials: true
 }));
+
 app.use(express.json());66
 app.use('/api', authRoutes);
 app.use('/api/annunci', annunciRouter);
