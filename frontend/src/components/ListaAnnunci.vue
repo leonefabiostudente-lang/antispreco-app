@@ -1,12 +1,58 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const annunci = ref([]);
 const loading = ref(true);
 const errore = ref(null);
 const filtroZona = ref("");
 
-// Funzione che chiama il backend con filtro
+let map;
+let markers = [];
+let userPos = ref(null);
+
+// 📌 Calcolo distanza (Haversine)
+function distanzaKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
+
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// 📍 Ottieni posizione utente
+function getUserLocation() {
+  if (!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      userPos.value = {
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude
+      };
+
+      // Marker utente
+      L.marker([userPos.value.lat, userPos.value.lon], {
+        icon: L.icon({
+          iconUrl: "https://cdn-icons-png.flaticon.com/512/64/64113.png",
+          iconSize: [32, 32]
+        })
+      })
+        .addTo(map)
+        .bindPopup("Tu sei qui");
+    },
+    err => console.warn("Geolocalizzazione negata")
+  );
+}
+
+// 🔍 Carica annunci
 async function caricaAnnunci() {
   loading.value = true;
 
@@ -18,7 +64,30 @@ async function caricaAnnunci() {
     const res = await fetch(url);
     if (!res.ok) throw new Error("Errore nel caricamento degli annunci");
 
-    annunci.value = await res.json();
+    let data = await res.json();
+
+    // ➕ Calcola distanza per ogni annuncio
+    if (userPos.value) {
+      data = data.map(a => {
+        if (a.latitudine && a.longitudine) {
+          a.distanza = distanzaKm(
+            userPos.value.lat,
+            userPos.value.lon,
+            a.latitudine,
+            a.longitudine
+          );
+        } else {
+          a.distanza = null;
+        }
+        return a;
+      });
+
+      // Ordina per distanza
+      data.sort((a, b) => (a.distanza ?? 9999) - (b.distanza ?? 9999));
+    }
+
+    annunci.value = data;
+
   } catch (err) {
     errore.value = err.message;
   } finally {
@@ -26,9 +95,40 @@ async function caricaAnnunci() {
   }
 }
 
-onMounted(caricaAnnunci);
+// 🗺️ Inizializza mappa
+onMounted(() => {
+  map = L.map("map").setView([45.6983, 9.6773], 12);
 
-// Ricarica gli annunci quando cambia il filtro
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+  }).addTo(map);
+
+  getUserLocation();
+  caricaAnnunci();
+});
+
+// 🎯 Aggiorna marker
+watch(annunci, () => {
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  annunci.value.forEach(a => {
+    if (a.latitudine && a.longitudine) {
+      const marker = L.marker([a.latitudine, a.longitudine]).addTo(map);
+
+      marker.bindPopup(`
+        <b>${a.titolo}</b><br>
+        ${a.zona}<br>
+        <i>${a.categoria}</i><br>
+        ${a.distanza ? a.distanza.toFixed(1) + " km da te" : ""}
+      `);
+
+      markers.push(marker);
+    }
+  });
+});
+
+// 🔄 Ricarica quando cambia il filtro
 watch(filtroZona, () => {
   caricaAnnunci();
 });
@@ -44,18 +144,15 @@ watch(filtroZona, () => {
 
   <h2>Annunci disponibili</h2>
 
-  <!-- Stato di caricamento -->
-  <div v-if="loading">Caricamento in corso...</div>
+  <div id="map" style="height: 400px; width: 100%; margin: 20px 0;"></div>
 
-  <!-- Errore -->
+  <div v-if="loading">Caricamento in corso...</div>
   <div v-if="errore">{{ errore }}</div>
 
-  <!-- Nessun annuncio -->
   <div v-if="!loading && annunci.length === 0">
     Nessun annuncio presente.
   </div>
 
-  <!-- GRIGLIA ANNUNCI -->
   <div class="annunci-grid">
     <div v-for="a in annunci" :key="a._id" class="annuncio-card">
       <h3>{{ a.titolo }}</h3>
@@ -64,6 +161,10 @@ watch(filtroZona, () => {
       <p><strong>Categoria:</strong> {{ a.categoria }}</p>
       <p><strong>Quantità:</strong> {{ a.quantita }}</p>
       <p><strong>Zona:</strong> {{ a.zona }}</p>
+
+      <p v-if="a.distanza">
+        <strong>Distanza:</strong> {{ a.distanza.toFixed(1) }} km
+      </p>
 
       <p>
         <strong>Disponibile fino al:</strong>
@@ -89,45 +190,8 @@ watch(filtroZona, () => {
 </template>
 
 <style>
-/* Input ricerca */
-.search-input {
-  width: 100%;
-  padding: 10px;
-  margin: 15px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 16px;
-}
-
-/* GRIGLIA */
-.annunci-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-
-/* CARD ANNUNCIO */
-.annuncio-card {
-  background: white;
+#map {
   border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.annuncio-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-}
-
-.annuncio-card h3 {
-  margin: 0 0 10px;
-  font-size: 20px;
-}
-
-.annuncio-card p {
-  margin: 5px 0;
-  color: #444;
+  overflow: hidden;
 }
 </style>
