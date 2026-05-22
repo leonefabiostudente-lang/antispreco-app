@@ -26,28 +26,32 @@
   <img
     role="listitem"
     src="https://images.pexels.com/photos/6646910/pexels-photo-6646910.jpeg?auto=compress&cs=tinysrgb&w=400&h=300"
-    alt="Volontari che servono cibo in un centro di distribuzione"
+    alt="Volontari che distribuiscono cibo recuperato"
     loading="lazy"
   />
+
   <img
     role="listitem"
     src="https://images.pexels.com/photos/6995240/pexels-photo-6995240.jpeg?auto=compress&cs=tinysrgb&w=400&h=300"
-    alt="Scatola per donazioni alimentari con generi di prima necessità"
+    alt="Scatola di donazioni alimentari per ridurre lo spreco"
     loading="lazy"
   />
+
   <img
     role="listitem"
     src="https://images.pexels.com/photos/6646912/pexels-photo-6646912.jpeg?auto=compress&cs=tinysrgb&w=400&h=300"
-    alt="Volontari che smistano donazioni alimentari in una mensa"
+    alt="Volontari che selezionano cibo da redistribuire"
     loading="lazy"
   />
+
   <img
     role="listitem"
     src="https://images.pexels.com/photos/6646905/pexels-photo-6646905.jpeg?auto=compress&cs=tinysrgb&w=400&h=300"
-    alt="Persone che ricevono cibo in una distribuzione comunitaria"
+    alt="Distribuzione di alimenti recuperati alla comunità"
     loading="lazy"
   />
 </div>
+
 
       </div>
     </section>
