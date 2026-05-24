@@ -56,7 +56,8 @@ async function registra() {
 <template>
   <div class="container mt-5">
     <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6">
+      <!-- COLONNA RESPONSIVE MIGLIORATA -->
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
 
         <h2 class="mb-4 text-center">Registrazione</h2>
 
@@ -144,22 +145,27 @@ async function registra() {
     </div>
   </div>
 </template>
+
 <style scoped>
+/* Input più grandi e fluidi */
 .form-control,
 .form-select {
-  padding: 12px 16px;
+  width: 100%;
+  padding: 14px 18px;
   font-size: 1.1rem;
 }
 
+/* Form moderno e leggibile */
 form {
+  width: 100%;
   background: #fff;
   border-radius: 12px;
   padding: 25px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
+/* Etichette più leggibili */
 label {
   font-weight: 600;
 }
 </style>
-
