@@ -25,34 +25,34 @@
 
       <div class="hero-right" aria-hidden="false">
         <div class="img-grid" role="list">
-  <img
-    role="listitem"
-  src="https://images.unsplash.com/photo-1683110207034-0e3b82466e0e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=640" 
+<img
+  role="listitem"
+  src="@/assets/images/pomodorini.jpg"
   alt="Volontario che tiene una scatola di donazioni"
-    loading="lazy"
-  />
+  loading="lazy"
+/>
 
-  <img
-    role="listitem"
-    src="https://images.unsplash.com/photo-1461344577544-4e5dc9487184?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=640"
-    alt="Scatola di donazioni alimentari per ridurre lo spreco"
-    loading="lazy"
-  />
+<img
+  role="listitem"
+  src="@/assets/images/buste_cibo.jpg"
+  alt="Scatola di donazioni alimentari per ridurre lo spreco"
+  loading="lazy"
+/>
 
-  <img
-    role="listitem"
-     src="https://images.unsplash.com/photo-1588952964696-17b7c1e3b6ae?auto=format&fit=crop&w=400&q=60" 
-     alt="Mele e banane in scatola di cartone"
-    loading="lazy"
-  />
+<img
+  role="listitem"
+  src="@/assets/images/donazione.jpg"
+  alt="Mele e banane in scatola di cartone"
+  loading="lazy"
+/>
 
-  <img
-    role="listitem"
-     src="https://images.unsplash.com/photo-1661780209073-0e3b82466e0e?auto=format&fit=crop&w=400&q=60"
-     alt="Gruppo di volontari che lavorano nel centro di donazione"
+<img
+  role="listitem"
+  src="@/assets/images/unione.jpg"
+  alt="Gruppo di volontari che lavorano nel centro di donazione"
+  loading="lazy"
+/>
 
-    loading="lazy"
-  />
 </div>
 
 
