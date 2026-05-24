@@ -14,13 +14,13 @@ let userPos = ref(null);
 
 // 📌 Icone per categoria
 const icons = {
-  pane: "https://cdn-icons-png.flaticon.com/512/1046/1046769.png",
-  dolci: "https://cdn-icons-png.flaticon.com/512/2203/2203189.png",
-  frutta: "https://cdn-icons-png.flaticon.com/512/415/415733.png",
-  verdura: "https://cdn-icons-png.flaticon.com/512/766/766149.png",
-  pasti_pronti: "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",
-  bevande: "https://cdn-icons-png.flaticon.com/512/1046/1046786.png",
-  altro: "https://cdn-icons-png.flaticon.com/512/565/565547.png"
+  pane: "https://cdn-icons-png.flaticon.com/512/2738/2738730.png",          // pane / bakery
+  dolci: "https://cdn-icons-png.flaticon.com/512/2203/2203189.png",         // dolci
+  frutta: "https://cdn-icons-png.flaticon.com/512/415/415733.png",          // frutta
+  verdura: "https://cdn-icons-png.flaticon.com/512/766/766149.png",         // verdura
+  pasti_pronti: "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",  // pasti pronti
+  bevande: "https://cdn-icons-png.flaticon.com/512/1046/1046786.png",       // bevande (bicchiere)
+  altro: "https://cdn-icons-png.flaticon.com/512/565/565547.png"            // altro
 };
 
 // 🔧 Funzione per ottenere l’icona giusta
