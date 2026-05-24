@@ -9,12 +9,14 @@
           Metti in condivisione ciò che non useresti, ritira ciò che ti serve: semplice, sicuro e gratuito.
         </p>
 
-        <nav class="hero-links" aria-label="Azioni principali">
-          <router-link class="btn-primary" to="/annunci">Vai agli annunci</router-link>
-          <router-link class="btn-outline" to="/nuovo-annuncio">Pubblica un annuncio</router-link>
-          <router-link class="btn-ghost" to="/login">Login</router-link>
-          <router-link class="btn-ghost" to="/register">Registrati</router-link>
-        </nav>
+   <nav class="hero-links" aria-label="Azioni principali">
+  <router-link class="btn-primary" to="/annunci">Vai agli annunci</router-link>
+  <router-link class="btn-primary" to="/nuovo-annuncio">Pubblica un annuncio</router-link>
+
+  <router-link class="btn-outline" to="/login">Login</router-link>
+  <router-link class="btn-outline" to="/register">Registrati</router-link>
+</nav>
+
 
         <p class="hero-note">
           Aiuta la tua comunità: ritira o dona cibo vicino a te. Nessun costo, solo solidarietà.

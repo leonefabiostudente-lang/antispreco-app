@@ -6,18 +6,21 @@
           <span class="leaf" aria-hidden="true">🍃</span>
           <span class="brand">Antispreco</span>
         </h1>
+
+        <!-- HAMBURGER -->
         <button class="mobile-toggle" @click="open = !open" :aria-expanded="open" aria-label="Apri menu">
           <span v-if="!open">☰</span>
           <span v-else>✕</span>
         </button>
       </div>
 
+      <!-- MENU -->
       <div class="nav-links" :class="{ open: open }">
-        <router-link to="/" @click.native="open = false">Home</router-link>
-        <router-link to="/annunci" @click.native="open = false">Annunci</router-link>
-        <router-link to="/nuovo-annuncio" @click.native="open = false">Nuovo annuncio</router-link>
-        <router-link to="/login" @click.native="open = false">Login</router-link>
-        <router-link to="/register" @click.native="open = false">Registrati</router-link>
+        <router-link to="/" @click="open = false">Home</router-link>
+        <router-link to="/annunci" @click="open = false">Annunci</router-link>
+        <router-link to="/nuovo-annuncio" @click="open = false">Nuovo annuncio</router-link>
+        <router-link to="/login" @click="open = false">Login</router-link>
+        <router-link to="/register" @click="open = false">Registrati</router-link>
 
         <button
           class="dark-toggle"
@@ -66,7 +69,7 @@ function toggleDarkMode() {
   --nav-height: 72px;
 }
 
-/* Base + texture */
+/* Base */
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
@@ -113,14 +116,13 @@ body.dark-mode {
   border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 
-/* Brand area */
+/* Brand */
 .brand-wrap {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* Logo: larger and dynamic */
 .logo {
   display: flex;
   align-items: center;
@@ -129,7 +131,6 @@ body.dark-mode {
   line-height: 1;
 }
 
-/* leaf */
 .leaf {
   font-size: 26px;
   padding: 6px;
@@ -137,12 +138,10 @@ body.dark-mode {
   background: linear-gradient(90deg, rgba(79,70,229,0.08), rgba(47,133,90,0.06));
 }
 
-/* Brand text: big, dynamic gradient, slight tilt for dynamism */
 .brand {
-  font-size: 28px;               /* aumentato */
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.6px;
-  display: inline-block;
   transform: skewX(-6deg);
   padding: 6px 10px;
   border-radius: 8px;
@@ -151,30 +150,23 @@ body.dark-mode {
   background-clip: text;
   color: transparent;
   animation: hueShift 6s linear infinite;
-  text-shadow: 0 6px 18px rgba(79,70,229,0.06);
 }
 
-/* Slightly larger on wide screens */
-@media (min-width: 1100px) {
-  .brand { font-size: 34px; }
-}
-
-/* Mobile toggle (hamburger) */
+/* Hamburger */
 .mobile-toggle {
   display: none;
   background: transparent;
   border: none;
-  font-size: 20px;
+  font-size: 28px;
   padding: 6px;
   cursor: pointer;
 }
 
-/* Nav links */
+/* Links */
 .nav-links {
   display: flex;
   align-items: center;
   gap: 12px;
-  transition: transform .18s ease, opacity .18s ease;
 }
 
 .nav-links a {
@@ -185,47 +177,6 @@ body.dark-mode {
   font-weight: 600;
   font-size: 14px;
   position: relative;
-  transition: color .18s ease, transform .12s ease;
-}
-
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  left: 10%;
-  right: 10%;
-  bottom: 6px;
-  height: 3px;
-  border-radius: 6px;
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s ease;
-  opacity: 0;
-  background: linear-gradient(90deg, var(--accent-1), var(--accent-3));
-}
-
-.nav-links a:hover {
-  transform: translateY(-3px);
-  color: #0f1724;
-}
-
-.nav-links a:hover::after {
-  transform: scaleX(1);
-  opacity: 1;
-}
-
-/* Active link */
-.router-link-active,
-.nav-links a.router-link-active {
-  color: var(--accent-1);
-}
-
-/* Dark mode link colors */
-.app-container.dark-mode .nav-links a {
-  color: #e6eef0;
-  opacity: 0.95;
-}
-.app-container.dark-mode .nav-links a::after {
-  background: linear-gradient(90deg, #34d399, #a78bfa);
 }
 
 /* Dark toggle */
@@ -236,60 +187,55 @@ body.dark-mode {
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* Content and footer */
+/* Content */
 .content {
   flex: 1;
   padding: 36px 20px;
   max-width: 1100px;
   margin: 0 auto;
-  width: 100%;
 }
 
+/* Footer */
 .footer {
   text-align: center;
   padding: 18px;
   color: var(--muted);
   font-size: 13px;
   border-top: 1px solid rgba(0,0,0,0.04);
-  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
 }
 
-/* Animation for brand gradient */
+/* Animation */
 @keyframes hueShift {
   0% { filter: hue-rotate(0deg); }
   50% { filter: hue-rotate(30deg); }
   100% { filter: hue-rotate(0deg); }
 }
 
-/* Responsive: collapse menu */
+/* MOBILE FIX */
 @media (max-width: 820px) {
+  .mobile-toggle {
+    display: inline-flex;
+  }
+
   .nav-links {
     position: absolute;
     top: var(--nav-height);
     right: 12px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.95));
+    background: white;
     border-radius: 12px;
-    padding: 12px;
+    padding: 16px;
     box-shadow: 0 12px 30px rgba(20,20,20,0.08);
     flex-direction: column;
-    gap: 8px;
-    transform-origin: top right;
-    transform: scale(0.98);
-    opacity: 0;
-    pointer-events: none;
+    gap: 12px;
+
+    /* FIX: menu non sparisce più */
+    display: none;
   }
 
   .nav-links.open {
-    transform: scale(1);
-    opacity: 1;
-    pointer-events: auto;
+    display: flex;
   }
-
-  .mobile-toggle { display: inline-flex; }
 }
 </style>
