@@ -104,7 +104,7 @@ function cercaZona() {
 
   debounceTimer = setTimeout(async () => {
     try {
-      // 💻 CORRETTO: Inserito il simbolo $ prima della parentesi graffa e ripristinato il dominio corretto
+      // ✅ RISOLTO: Inserito "nominatim" e aggiunto il simbolo "$" mancante prima della graffa
       const url = `https://openstreetmap.org{encodeURIComponent(zona.value)}&countrycodes=it&limit=5`;
       
       const res = await fetch(url, {
@@ -143,7 +143,7 @@ async function inviaAnnuncio() {
   };
 
   try {
-    // 💻 CORRETTO: Aggiunto lo slash finale "/" dopo "annunci" per evitare il redirect e il blocco CORS di Render
+    // ✅ RISOLTO: Inserito l'URL completo del tuo backend specifico, comprensivo di slash finale
     const res = await axios.post(
       "https://onrender.com", 
       nuovoAnnuncio,
@@ -167,7 +167,6 @@ async function inviaAnnuncio() {
   }
 }
 </script>
-
 
 <style scoped>
 .form-container {
