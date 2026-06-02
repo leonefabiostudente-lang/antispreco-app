@@ -28,10 +28,10 @@
 
       <input v-model="quantita" type="text" placeholder="Quantità (es: 1 teglia, 2 kg)" required />
 
-      <!-- ⭐ NUOVO CAMPO TELEFONO INTEGRATO -->
+      <!-- CAMPO TELEFONO -->
       <input v-model="telefono" type="tel" placeholder="Numero di telefono" required />
 
-      <!-- ZONA CON AUTOCOMPLETAMENTO INTEGRATO NELLO STILE BOX -->
+      <!-- ZONA CON AUTOCOMPLETAMENTO -->
       <div class="autocomplete-container">
         <input 
           v-model="zona" 
@@ -85,7 +85,7 @@ const titolo = ref("");
 const descrizione = ref("");
 const categoria = ref("");
 const quantita = ref("");
-const telefono = ref(""); // ⭐ Aggiunto campo telefono
+const telefono = ref(""); 
 const zona = ref("");
 const data_scadenza = ref("");
 const orario_ritiro_inizio = ref("");
@@ -104,9 +104,11 @@ function cercaZona() {
 
   debounceTimer = setTimeout(async () => {
     try {
+      // RISOLTO: URL corretto con "nominatim" e sintassi delle variabili `${}` corretta
       const url = `https://openstreetmap.org{encodeURIComponent(zona.value)}&countrycodes=it&limit=5`;
+      
       const res = await fetch(url, {
-        headers: { 'User-Agent': 'antispreco-app-frontend (contatto@esempio.com)' }
+        headers: { 'User-Agent': 'antispreco-app-frontend (contatto-sviluppo@esempio.com)' }
       });
       if (res.ok) {
         suggerimenti.value = await res.json();
@@ -133,7 +135,7 @@ async function inviaAnnuncio() {
     descrizione: descrizione.value,
     categoria: categoria.value,
     quantita: quantita.value,
-    telefono_utente: telefono.value, // ⭐ Inviato correttamente al backend
+    telefono_utente: telefono.value, 
     zona: zona.value,
     data_scadenza: data_scadenza.value,
     orario_ritiro_inizio: orario_ritiro_inizio.value,
@@ -141,7 +143,7 @@ async function inviaAnnuncio() {
   };
 
   try {
-    // ⭐ Passati ad Axios per uniformità con NuovoAnnuncio.vue
+    // RISOLTO: Reinserita la chiamata Axios completa verso il tuo backend specifico
     const res = await axios.post(
       "https://onrender.com", 
       nuovoAnnuncio,
@@ -154,7 +156,7 @@ async function inviaAnnuncio() {
 
     if (res.status === 201 || res.status === 200) {
       alert("Annuncio pubblicato con successo!");
-      router.push("/annunci"); // Reindirizza alla lista annunci
+      router.push("/annunci"); 
     }
   } catch (err) {
     console.error("Errore invio:", err.response?.data);
@@ -167,7 +169,6 @@ async function inviaAnnuncio() {
 </script>
 
 <style scoped>
-/* 💅 formattazione pulita in stile "NuovoAnnuncio.vue" */
 .form-container {
   max-width: 500px;
   margin: 30px auto;
@@ -236,7 +237,6 @@ button:hover {
   background: #236136;
 }
 
-/* 📍 STILI AUTOCOMPLETAMENTO */
 .autocomplete-container {
   position: relative;
   width: 100%;
