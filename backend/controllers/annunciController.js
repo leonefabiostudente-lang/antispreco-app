@@ -13,10 +13,9 @@ function normalizeCategoria(cat) {
 
 async function geocode(zona) {
   try {
-    // URL corretto per interrogare Nominatim dal server cloud
-    const url = `https://openstreetmap.org{encodeURIComponent(
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
       zona + ", Italia"
-    )}&limit=1`;
+    )}&limit=1&countrycodes=it`;
 
     const res = await fetch(url, {
       headers: {
@@ -29,13 +28,11 @@ async function geocode(zona) {
 
     const data = await res.json();
 
-    // Se l'array è vuoto, restituisce null per evitare crash
     if (!data || data.length === 0) {
       console.log("❌ Nessun risultato trovato per la zona:", zona);
       return { lat: null, lon: null };
     }
 
-    // ✅ CORREZIONE DEFINITIVA: Usiamo l'indice [0] perché l'API restituisce un array di oggetti
     return {
       lat: parseFloat(data[0].lat),
       lon: parseFloat(data[0].lon)
@@ -45,6 +42,7 @@ async function geocode(zona) {
     return { lat: null, lon: null };
   }
 }
+
 
 
 

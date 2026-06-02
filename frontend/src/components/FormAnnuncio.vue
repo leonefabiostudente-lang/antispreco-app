@@ -90,6 +90,9 @@ const zona = ref("");
 const data_scadenza = ref("");
 const orario_ritiro_inizio = ref("");
 const orario_ritiro_fine = ref("");
+const lat = ref("");
+const lng = ref("");
+
 
 // Autocompletamento OpenStreetMap
 const suggerimenti = ref([]);
@@ -122,8 +125,14 @@ const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeUR
 
 function selezionaSuggerimento(item) {
   zona.value = item.display_name;
+  lat.value = item.lat;
+  lng.value = item.lon;
   suggerimenti.value = [];
 }
+const lat = ref("");
+const lng = ref("");
+
+
 async function inviaAnnuncio() {
   // 1️⃣ Controllo preventivo del token
   if (!token) {
@@ -132,17 +141,20 @@ async function inviaAnnuncio() {
   }
 
   // 2️⃣ Costruzione dell'oggetto con tutti i campi del form
-  const nuovoAnnuncio = {
-    titolo: titolo.value,
-    descrizione: descrizione.value,
-    categoria: categoria.value,
-    quantita: quantita.value,
-    telefono_utente: telefono.value, 
-    zona: zona.value,
-    data_scadenza: data_scadenza.value,
-    orario_ritiro_inizio: orario_ritiro_inizio.value,
-    orario_ritiro_fine: orario_ritiro_fine.value
-  };
+const nuovoAnnuncio = {
+  titolo: titolo.value,
+  descrizione: descrizione.value,
+  categoria: categoria.value,
+  quantita: quantita.value,
+  telefono_utente: telefono.value,
+  zona: zona.value,
+  lat: lat.value,
+  lng: lng.value,
+  data_scadenza: data_scadenza.value,
+  orario_ritiro_inizio: orario_ritiro_inizio.value,
+  orario_ritiro_fine: orario_ritiro_fine.value
+};
+
 
   try {
     // 3️⃣ Chiamata Axios verso l'URL funzionante del tuo backend su Render (con lo slash finale)
