@@ -1,56 +1,125 @@
+<template>
+  <div class="form-container">
+    <h2 class="page-title">Pubblica un nuovo annuncio</h2>
+
+    <!-- BLOCCO SE NON LOGGATO -->
+    <div v-if="!token" class="auth-alert">
+      <p>Devi essere registrato per pubblicare un annuncio.</p>
+      <router-link to="/login" class="login-link">Vai al login</router-link>
+    </div>
+
+    <!-- FORM FORMATTATO COME NUOVOANNUNCIO -->
+    <form v-else class="form-box" @submit.prevent="inviaAnnuncio">
+      
+      <select v-model="categoria" required>
+        <option disabled value="">Seleziona categoria</option>
+        <option value="pane">Pane</option>
+        <option value="dolci">Dolci</option>
+        <option value="frutta">Frutta</option>
+        <option value="verdura">Verdura</option>
+        <option value="pasti_pronti">Pasti pronti</option>
+        <option value="bevande">Bevande</option>
+        <option value="altro">Altro</option>
+      </select>
+
+      <input v-model="titolo" type="text" placeholder="Titolo" required />
+
+      <textarea v-model="descrizione" placeholder="Descrizione" rows="4" required></textarea>
+
+      <input v-model="quantita" type="text" placeholder="Quantità (es: 1 teglia, 2 kg)" required />
+
+      <!-- ⭐ NUOVO CAMPO TELEFONO INTEGRATO -->
+      <input v-model="telefono" type="tel" placeholder="Numero di telefono" required />
+
+      <!-- ZONA CON AUTOCOMPLETAMENTO INTEGRATO NELLO STILE BOX -->
+      <div class="autocomplete-container">
+        <input 
+          v-model="zona" 
+          type="text" 
+          @input="cercaZona" 
+          placeholder="Zona (Città, Via o Provincia)" 
+          autocomplete="off" 
+          required 
+        />
+        
+        <ul v-if="suggerimenti.length > 0" class="autocomplete-dropdown">
+          <li 
+            v-for="(item, index) in suggerimenti" 
+            :key="index" 
+            @click="selezionaSuggerimento(item)"
+          >
+            {{ item.display_name }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="datetime-group">
+        <label>Data di scadenza prodotto:</label>
+        <input v-model="data_scadenza" type="date" required />
+      </div>
+
+      <div class="datetime-group">
+        <label>Orario ritiro disponibilità:</label>
+        <div class="time-range">
+          <input v-model="orario_ritiro_inizio" type="time" required />
+          <span>fino a</span>
+          <input v-model="orario_ritiro_fine" type="time" required />
+        </div>
+      </div>
+
+      <button type="submit">Pubblica</button>
+    </form>
+  </div>
+</template>
+
 <script setup>
 import { ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
 
-// Recupero token
 const token = localStorage.getItem("token");
+const router = useRouter();
 
-// Campi del form
+// Campi del form reattivi
 const titolo = ref("");
 const descrizione = ref("");
 const categoria = ref("");
 const quantita = ref("");
+const telefono = ref(""); // ⭐ Aggiunto campo telefono
 const zona = ref("");
 const data_scadenza = ref("");
 const orario_ritiro_inizio = ref("");
 const orario_ritiro_fine = ref("");
 
-// Stati per l'autocompletamento geografico
+// Autocompletamento OpenStreetMap
 const suggerimenti = ref([]);
 let debounceTimer = null;
 
-// Funzione per cercare la zona in tempo reale mentre l'utente digita
 function cercaZona() {
   clearTimeout(debounceTimer);
-  
   if (zona.value.trim().length < 3) {
     suggerimenti.value = [];
     return;
   }
 
-  // Attende 400ms dall'ultimo tasto premuto prima di effettuare la chiamata API
   debounceTimer = setTimeout(async () => {
     try {
-      const url = `https://openstreetmap.org{encodeURIComponent(
-        zona.value + ", Italia"
-      )}&limit=5`;
-      
+      const url = `https://openstreetmap.org{encodeURIComponent(zona.value)}&countrycodes=it&limit=5`;
       const res = await fetch(url, {
-        headers: { 'User-Agent': 'antispreco-app-frontend (contatto-sviluppo@tuodominio.com)' }
+        headers: { 'User-Agent': 'antispreco-app-frontend (contatto@esempio.com)' }
       });
-      
       if (res.ok) {
         suggerimenti.value = await res.json();
       }
     } catch (error) {
-      console.error("Errore durante l'autocompletamento:", error);
+      console.error("Errore autocompletamento:", error);
     }
   }, 400);
 }
 
-// Funzione per impostare la zona selezionata dalla tendina
 function selezionaSuggerimento(item) {
   zona.value = item.display_name;
-  suggerimenti.value = []; // Chiude la tendina
+  suggerimenti.value = [];
 }
 
 async function inviaAnnuncio() {
@@ -64,151 +133,110 @@ async function inviaAnnuncio() {
     descrizione: descrizione.value,
     categoria: categoria.value,
     quantita: quantita.value,
+    telefono_utente: telefono.value, // ⭐ Inviato correttamente al backend
     zona: zona.value,
     data_scadenza: data_scadenza.value,
     orario_ritiro_inizio: orario_ritiro_inizio.value,
     orario_ritiro_fine: orario_ritiro_fine.value
   };
 
-  const res = await fetch("https://antispreco-app-2.onrender.com/api/annunci", {
-    method: "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + token
-    },
-    body: JSON.stringify(nuovoAnnuncio)
-  });
+  try {
+    // ⭐ Passati ad Axios per uniformità con NuovoAnnuncio.vue
+    const res = await axios.post(
+      "https://onrender.com", 
+      nuovoAnnuncio,
+      {
+        headers: { 
+          "Authorization": "Bearer " + token
+        }
+      }
+    );
 
-  const data = await res.json();
-  console.log("Dati inviati:", nuovoAnnuncio);
-  console.log("Risposta backend:", data);
-
-  if (res.ok) {
-    alert("Annuncio pubblicato!");
-    titolo.value = "";
-    descrizione.value = "";
-    categoria.value = "";
-    quantita.value = "";
-    zona.value = "";
-    data_scadenza.value = "";
-    orario_ritiro_inizio.value = "";
-    orario_ritiro_fine.value = "";
-  } else {
-    // Mostra anche i dettagli dell'errore se presenti (es. Geocoding fallito)
-    const messaggioErrore = data.dettagli ? `${data.error}: ${data.dettagli}` : (data.error || "Errore sconosciuto");
-    alert("Errore durante la pubblicazione: " + messaggioErrore);
+    if (res.status === 201 || res.status === 200) {
+      alert("Annuncio pubblicato con successo!");
+      router.push("/annunci"); // Reindirizza alla lista annunci
+    }
+  } catch (err) {
+    console.error("Errore invio:", err.response?.data);
+    const messaggio = err.response?.data?.dettagli 
+      ? `${err.response.data.error}: ${err.response.data.dettagli}` 
+      : (err.response?.data?.error || "Errore di connessione al server");
+    alert("Impossibile pubblicare: " + messaggio);
   }
 }
 </script>
 
-<template>
-  <div class="form-container">
-    <h2>Pubblica un nuovo annuncio</h2>
-
-    <!-- BLOCCO SE NON LOGGATO -->
-    <div v-if="!token">
-      <p>Devi essere registrato per pubblicare un annuncio.</p>
-      <router-link to="/login">Vai al login</router-link>
-    </div>
-
-    <!-- FORM SOLO SE LOGGATO -->
-    <form v-else @submit.prevent="inviaAnnuncio">
-
-      <label>Categoria</label>
-      <select v-model="categoria" required>
-        <option value="">Seleziona categoria</option>
-        <option value="pane">Pane</option>
-        <option value="dolci">Dolci</option>
-        <option value="frutta">Frutta</option>
-        <option value="verdura">Verdura</option>
-        <option value="pasti_pronti">Pasti pronti</option>
-        <option value="bevande">Bevande</option>
-        <option value="altro">Altro</option>
-      </select>
-
-      <label>Titolo</label>
-      <input v-model="titolo" type="text" required />
-
-      <label>Descrizione</label>
-      <textarea v-model="descrizione" required></textarea>
-
-      <label>Quantità</label>
-      <input v-model="quantita" type="text" required />
-
-      <!-- CAMPO ZONA CON AUTOCOMPLETAMENTO -->
-      <label for="zona">Zona (Città, Via o Provincia)</label>
-      <div class="autocomplete-container">
-        <input 
-          v-model="zona" 
-          type="text" 
-          @input="cercaZona" 
-          placeholder="Es: Grassobbio, Bergamo" 
-          autocomplete="off" 
-          required 
-        />
-        
-        <!-- Menu a tendina dei suggerimenti geografici -->
-        <ul v-if="suggerimenti.length > 0" class="autocomplete-dropdown">
-          <li 
-            v-for="(item, index) in suggerimenti" 
-            :key="index" 
-            @click="selezionaSuggerimento(item)"
-          >
-            {{ item.display_name }}
-          </li>
-        </ul>
-      </div>
-
-      <label>Data di scadenza</label>
-      <input v-model="data_scadenza" type="date" required />
-
-      <label>Orario ritiro (inizio)</label>
-      <input v-model="orario_ritiro_inizio" type="time" required />
-
-      <label>Orario ritiro (fine)</label>
-      <input v-model="orario_ritiro_fine" type="time" required />
-
-      <button type="submit">Pubblica annuncio</button>
-    </form>
-  </div>
-</template>
-
-<style>
+<style scoped>
+/* 💅 formattazione pulita in stile "NuovoAnnuncio.vue" */
 .form-container {
-  border: 1px solid #ddd;
+  max-width: 500px;
+  margin: 30px auto;
   padding: 20px;
-  margin-bottom: 30px;
-  border-radius: 6px;
-  background: #f9f9f9;
 }
 
-form label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
+.page-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-form input,
-form textarea,
-form select {
+.form-box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-box input,
+.form-box textarea,
+.form-box select {
   width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  border-radius: 4px;
+  padding: 12px;
+  border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.datetime-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+}
+
+.datetime-group label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+}
+
+.time-range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-range input {
+  flex: 1;
 }
 
 button {
-  margin-top: 15px;
-  padding: 10px 20px;
+  padding: 12px;
   background: #2d7d46;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-/* STILI PER L'AUTOCOMPLETAMENTO */
+button:hover {
+  background: #236136;
+}
+
+/* 📍 STILI AUTOCOMPLETAMENTO */
 .autocomplete-container {
   position: relative;
   width: 100%;
@@ -226,14 +254,14 @@ button {
   list-style: none;
   padding: 0;
   margin: 0;
-  max-height: 200px;
+  max-height: 180px;
   overflow-y: auto;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 6px 6px;
 }
 
 .autocomplete-dropdown li {
-  padding: 10px;
+  padding: 12px;
   cursor: pointer;
   font-size: 14px;
   text-align: left;
@@ -242,5 +270,20 @@ button {
 
 .autocomplete-dropdown li:hover {
   background-color: #f1f1f1;
+}
+
+.auth-alert {
+  text-align: center;
+  padding: 20px;
+  background: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 6px;
+  color: #856404;
+}
+
+.login-link {
+  font-weight: bold;
+  color: #2d7d46;
+  text-decoration: underline;
 }
 </style>
