@@ -104,8 +104,9 @@ function cercaZona() {
 
   debounceTimer = setTimeout(async () => {
     try {
-      // ✅ URL SINCERATO: Contiene nominatim, il simbolo $ e le parentesi corrette per interpolare la variabile
-      const url = `https://openstreetmap.org{encodeURIComponent(zona.value)}&countrycodes=it&limit=5`;
+      
+const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(zona.value)}&countrycodes=it&limit=5`;
+
       
       const res = await fetch(url, {
         headers: { 'User-Agent': 'antispreco-app-frontend (contatto-sviluppo@esempio.com)' }
