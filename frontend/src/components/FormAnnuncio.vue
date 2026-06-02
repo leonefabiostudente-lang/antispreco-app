@@ -145,15 +145,17 @@ async function inviaAnnuncio() {
 
   try {
     // 3️⃣ Chiamata Axios verso l'URL funzionante del tuo backend su Render (con lo slash finale)
-    const res = await axios.post(
-      "https://onrender.com", 
-      nuovoAnnuncio,
-      {
-        headers: { 
-          "Authorization": "Bearer " + token
-        }
-      }
-    );
+    // ✅ RISOLTO: Usa la variabile d'ambiente dinamica racchiusa nei backtick `
+const res = await axios.post(
+  `${import.meta.env.VITE_API_URL}/annunci/`, 
+  nuovoAnnuncio,
+  {
+    headers: { 
+      "Authorization": "Bearer " + token
+    }
+  }
+);
+
 
     // 4️⃣ Gestione del successo
     if (res.status === 201 || res.status === 200) {
