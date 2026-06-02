@@ -123,16 +123,16 @@ function selezionaSuggerimento(item) {
   zona.value = item.display_name;
   suggerimenti.value = [];
 }
-
 async function inviaAnnuncio() {
+  // 1️⃣ Controllo preventivo del token
   if (!token) {
     alert("Devi essere loggato per pubblicare un annuncio.");
     return;
   }
 
+  // 2️⃣ Costruzione dell'oggetto con tutti i campi del form
   const nuovoAnnuncio = {
     titolo: titolo.value,
-    descrizione:描述.value,
     descrizione: descrizione.value,
     categoria: categoria.value,
     quantita: quantita.value,
@@ -144,7 +144,7 @@ async function inviaAnnuncio() {
   };
 
   try {
-    // ✅ URL PROGETTO REALE: Punta all'endpoint corretto dell'applicazione con lo slash finale
+    // 3️⃣ Chiamata Axios verso l'URL funzionante del tuo backend su Render (con lo slash finale)
     const res = await axios.post(
       "https://onrender.com", 
       nuovoAnnuncio,
@@ -155,18 +155,21 @@ async function inviaAnnuncio() {
       }
     );
 
+    // 4️⃣ Gestione del successo
     if (res.status === 201 || res.status === 200) {
       alert("Annuncio pubblicato con successo!");
-      router.push("/annunci"); 
+      router.push("/annunci"); // Ti sposta sulla lista annunci
     }
   } catch (err) {
     console.error("Errore invio:", err.response?.data);
+    // Mostra l'errore specifico del server (es: geocoding fallito) se presente
     const messaggio = err.response?.data?.dettagli 
       ? `${err.response.data.error}: ${err.response.data.dettagli}` 
       : (err.response?.data?.error || "Errore di connessione al server");
     alert("Impossibile pubblicare: " + messaggio);
   }
 }
+
 </script>
 
 <style scoped>
