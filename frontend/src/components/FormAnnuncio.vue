@@ -14,6 +14,45 @@ const data_scadenza = ref("");
 const orario_ritiro_inizio = ref("");
 const orario_ritiro_fine = ref("");
 
+// Stati per l'autocompletamento geografico
+const suggerimenti = ref([]);
+let debounceTimer = null;
+
+// Funzione per cercare la zona in tempo reale mentre l'utente digita
+function cercaZona() {
+  clearTimeout(debounceTimer);
+  
+  if (zona.value.trim().length < 3) {
+    suggerimenti.value = [];
+    return;
+  }
+
+  // Attende 400ms dall'ultimo tasto premuto prima di effettuare la chiamata API
+  debounceTimer = setTimeout(async () => {
+    try {
+      const url = `https://openstreetmap.org{encodeURIComponent(
+        zona.value + ", Italia"
+      )}&limit=5`;
+      
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'antispreco-app-frontend (contatto-sviluppo@tuodominio.com)' }
+      });
+      
+      if (res.ok) {
+        suggerimenti.value = await res.json();
+      }
+    } catch (error) {
+      console.error("Errore durante l'autocompletamento:", error);
+    }
+  }, 400);
+}
+
+// Funzione per impostare la zona selezionata dalla tendina
+function selezionaSuggerimento(item) {
+  zona.value = item.display_name;
+  suggerimenti.value = []; // Chiude la tendina
+}
+
 async function inviaAnnuncio() {
   if (!token) {
     alert("Devi essere loggato per pubblicare un annuncio.");
@@ -55,7 +94,9 @@ async function inviaAnnuncio() {
     orario_ritiro_inizio.value = "";
     orario_ritiro_fine.value = "";
   } else {
-    alert("Errore durante la pubblicazione: " + (data.error || "Errore sconosciuto"));
+    // Mostra anche i dettagli dell'errore se presenti (es. Geocoding fallito)
+    const messaggioErrore = data.dettagli ? `${data.error}: ${data.dettagli}` : (data.error || "Errore sconosciuto");
+    alert("Errore durante la pubblicazione: " + messaggioErrore);
   }
 }
 </script>
@@ -94,8 +135,29 @@ async function inviaAnnuncio() {
       <label>Quantità</label>
       <input v-model="quantita" type="text" required />
 
-      <label>Zona</label>
-      <input v-model="zona" type="text" required />
+      <!-- CAMPO ZONA CON AUTOCOMPLETAMENTO -->
+      <label for="zona">Zona (Città, Via o Provincia)</label>
+      <div class="autocomplete-container">
+        <input 
+          v-model="zona" 
+          type="text" 
+          @input="cercaZona" 
+          placeholder="Es: Grassobbio, Bergamo" 
+          autocomplete="off" 
+          required 
+        />
+        
+        <!-- Menu a tendina dei suggerimenti geografici -->
+        <ul v-if="suggerimenti.length > 0" class="autocomplete-dropdown">
+          <li 
+            v-for="(item, index) in suggerimenti" 
+            :key="index" 
+            @click="selezionaSuggerimento(item)"
+          >
+            {{ item.display_name }}
+          </li>
+        </ul>
+      </div>
 
       <label>Data di scadenza</label>
       <input v-model="data_scadenza" type="date" required />
@@ -144,5 +206,41 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+/* STILI PER L'AUTOCOMPLETAMENTO */
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 0 0 4px 4px;
+}
+
+.autocomplete-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  color: #333;
+}
+
+.autocomplete-dropdown li:hover {
+  background-color: #f1f1f1;
 }
 </style>
