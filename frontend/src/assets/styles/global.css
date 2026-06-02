@@ -201,6 +201,66 @@ textarea::placeholder {
   color: var(--text-darkmode);
 }
 /* -------------------------------------------------------
+   FIX ANNUNCI – icone troppo grandi
+------------------------------------------------------- */
+.card-info {
+  font-size: 14px;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-info p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.card-info p::before {
+  font-size: 16px;
+}
+
+/* -------------------------------------------------------
+   FIX MAPPA – troppo grigia
+------------------------------------------------------- */
+#map {
+  height: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* -------------------------------------------------------
+   FIX HOME – testo troppo centrale + foto dinamiche
+------------------------------------------------------- */
+.hero-card {
+  align-items: flex-start;
+}
+
+.hero-left {
+  padding-top: 10px;
+}
+
+.hero-right {
+  margin-top: 10px;
+}
+
+.img-grid img {
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  opacity: 0.95;
+}
+
+.img-grid img:hover {
+  transform: scale(1.06) rotate(0.5deg);
+  opacity: 1;
+}
+
+/* -------------------------------------------------------
    HOME – immagini e bottoni
 ------------------------------------------------------- */
 
