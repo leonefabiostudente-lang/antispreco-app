@@ -304,7 +304,7 @@ input, select, textarea {
 .hero-card {
   display: flex;
   align-items: center;
-  justify-content: center; /* Centra il contenuto globalmente */
+  justify-content: center; 
   gap: 40px;
   padding: 40px;
   width: 100%;
@@ -312,20 +312,19 @@ input, select, textarea {
 
 .hero-left {
   flex: 1;
-  max-width: 500px; /* Stringe leggermente il testo per farlo respirare */
+  max-width: 500px; 
 }
 
-/* Il contenitore del carosello – Ora perfettamente centrato nel suo blocco */
 .hero-right {
   width: 440px;
-  height: 240px; /* Allineato all'altezza delle slide */
+  height: 240px; 
   overflow: hidden;
   position: relative;
   border-radius: var(--radius);
   flex-shrink: 0;
-  margin-left: 0; /* Rimuove la spinta a destra di prima */
+  margin-left: 0; 
   display: flex;
-  justify-content: center; /* Centra le immagini al suo interno */
+  justify-content: center; 
 }
 
 .carousel-track-container {
@@ -356,7 +355,6 @@ input, select, textarea {
   object-fit: cover; 
 }
 
-/* Interazioni mouse */
 .carousel-track:hover { 
   animation-play-state: paused; 
 }
@@ -370,38 +368,41 @@ input, select, textarea {
   100% { transform: translateX(calc(-196px * 4)); } 
 }
 
-/* RESPONSIVE */
 @media (max-width: 820px) {
   .hero-card {
     flex-direction: column;
     padding: 24px;
-    text-align: center; /* Centra anche il testo su mobile */
+    text-align: center; 
   }
   .hero-links {
-    justify-content: center; /* Centra i bottoni su mobile */
+    display: flex;
+    justify-content: center; 
+    gap: 12px;
   }
   .hero-right {
     width: 100%;
+    height: auto;
   }
 }
+
 /* -------------------------------------------------------
-   9) LOGIN, 10) REGISTER, 11) ANNUNCI (Ottimizzato Foto/Emoji)
+   9) LOGIN, 10) REGISTER, 11) ANNUNCI
 ------------------------------------------------------- */
 .login-wrapper { max-width: 420px; margin: 80px auto; padding: 32px; }
 .register-card { max-width: 760px; margin: 0 auto; padding: 32px; }
 
-/* Griglia e Struttura Base Card */
-.annunci-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
+/* Griglia e Struttura Card Annunci */
+.annunci-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
 .annuncio-card { background: var(--card); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); transition: 0.2s; }
 .annuncio-card:hover { transform: translateY(-4px); }
 .app-container.dark-mode .annuncio-card { background: var(--card-dark); }
 
-/* CONTENITORE MEDIA (Ospita la foto o l'emoji di ripiego) */
+/* CONTENITORE MEDIA UNIFICATO (Fissato a 160px per mantenere le proporzioni) */
 .card-media-wrapper {
   width: 100%;
-  height: 160px; /* Altezza fissa e bilanciata per la card */
+  height: 160px; 
   overflow: hidden;
-  border-radius: calc(var(--radius) - 4px); /* Segue il raggio della tua card */
+  border-radius: calc(var(--radius) - 4px); 
   margin-bottom: 14px;
   background-color: #f8fafc;
   display: flex;
@@ -412,7 +413,6 @@ input, select, textarea {
   background-color: #1e293b;
 }
 
-/* 1. Stile se c'è la foto reale del prodotto */
 .prodotto-real-img {
   width: 100%;
   height: 100%;
@@ -423,17 +423,17 @@ input, select, textarea {
   transform: scale(1.04); 
 }
 
-/* 2. Stile se Manca la foto (Placeholder con Gradient + Emoji) */
+/* Placeholder con Gradient + Emoji */
 .card-emoji-fallback {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 50px; /* Dimensione perfetta dell'emoji al centro */
+  font-size: 50px; 
 }
 
-/* Sfondi pastello armoniosi per la Light Mode */
+/* Sfondi Pastello Light Mode */
 .card-emoji-fallback.pane { background: linear-gradient(135deg, #ffedd5, #fed7aa); }
 .card-emoji-fallback.dolci { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
 .card-emoji-fallback.frutta { background: linear-gradient(135deg, #fee2e2, #fecaca); }
@@ -442,7 +442,7 @@ input, select, textarea {
 .card-emoji-fallback.bevande { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
 .card-emoji-fallback.altro { background: linear-gradient(135deg, #f1f5f9, #e2e8f0); }
 
-/* Sfondi più scuri e soffusi per la Dark Mode (Evita l'effetto flash di notte) */
+/* Sfondi Dark Mode per Placeholder */
 .app-container.dark-mode .card-emoji-fallback.pane { background: linear-gradient(135deg, #431407, #63200e); }
 .app-container.dark-mode .card-emoji-fallback.dolci { background: linear-gradient(135deg, #4a044e, #581c5c); }
 .app-container.dark-mode .card-emoji-fallback.frutta { background: linear-gradient(135deg, #450a0a, #631111); }
@@ -451,9 +451,9 @@ input, select, textarea {
 .app-container.dark-mode .card-emoji-fallback.bevande { background: linear-gradient(135deg, #1e1b4b, #282566); }
 .app-container.dark-mode .card-emoji-fallback.altro { background: linear-gradient(135deg, #1e293b, #293548); }
 
-/* Informazioni interne della card */
 .card-info { font-size: 14px; line-height: 1.4; display: flex; flex-direction: column; gap: 4px; }
 .card-info p { display: flex; align-items: center; gap: 6px; }
+
 /* -------------------------------------------------------
    12) MAPPA – LEAFLET FIX
 ------------------------------------------------------- */
@@ -463,25 +463,33 @@ input, select, textarea {
 .leaflet-control { pointer-events: auto; }
 
 /* -------------------------------------------------------
-   13) SEZIONI EXTRA HOME & FOOTER
+   13) SEZIONI EXTRA HOME & FOOTER (Ottimizzato Mobile)
 ------------------------------------------------------- */
-.home-section { margin-top: 50px; margin-bottom: 20px; }
-.section-title { text-align: center; font-size: 26px; font-weight: 800; margin-bottom: 28px; }
-.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-.step-card { text-align: center; padding: 30px 20px; }
-.step-icon { font-size: 38px; margin-bottom: 14px; }
+.home-section { margin-top: 50px; margin-bottom: 20px; width: 100%; }
+.section-title { text-align: center; font-size: 26px; font-weight: 800; margin-bottom: 28px; padding: 0 10px; }
+
+/* Griglia dei Passaggi (Pubblica, Accordati, Salva) */
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; width: 100%; }
+.step-card { text-align: center; padding: 30px 20px; width: 100%; }
+.step-icon { font-size: 38px; margin-bottom: 14px; display: block; }
 .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--accent); }
 .step-card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
 .app-container.dark-mode .step-card p { color: #94a3b8; }
 
-.stats-section { background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(47, 133, 90, 0.04)); border: 1px solid rgba(47, 133, 90, 0.08); padding: 40px 20px; }
+/* Sezione Impatto Collettivo / Statistiche */
+.stats-section { background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(47, 133, 90, 0.04)); border: 1px solid rgba(47, 133, 90, 0.08); padding: 40px 20px; border-radius: var(--radius); width: 100%; }
 .stats-grid { display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 30px; }
-.stat-item { text-align: center; display: flex; flex-direction: column; gap: 4px; }
+.stat-item { text-align: center; display: flex; flex-direction: column; gap: 4px; min-width: 150px; }
 .stat-number { font-size: 34px; font-weight: 800; color: var(--accent); }
 .stat-label { font-size: 14px; font-weight: 600; color: var(--text-muted); }
 .app-container.dark-mode .stat-label { color: var(--text-darkmode); }
 
-@media (max-width: 600px) { .stats-grid { flex-direction: column; } }
+/* Correzione Layout Verticale per Schermi Piccoli (Smartphone) */
+@media (max-width: 650px) { 
+  .stats-grid { flex-direction: column; gap: 35px; } 
+  .steps-grid { grid-template-columns: 1fr; gap: 16px; }
+  .content { padding: 20px 14px; }
+}
 
 /* Footer */
 .footer {
@@ -495,41 +503,4 @@ input, select, textarea {
 .app-container.dark-mode .footer {
   color: #64748b;
   border-top: 1px solid rgba(255,255,255,0.05);
-}
-
-/* -------------------------------------------------------
-   14) BACHECA ANNUNCI – CARD E IMMAGINI PRODOTTI
-------------------------------------------------------- */
-.card-media-wrapper {
-  width: 100%;
-  height: 180px; 
-  overflow: hidden;
-  border-radius: 8px;
-  margin-bottom: 14px;
-  background-color: #f8fafc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.app-container.dark-mode .card-media-wrapper {
-  background-color: #1e293b;
-}
-
-.prodotto-real-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-  transition: transform 0.3s ease;
-}
-
-.annuncio-card:hover .prodotto-real-img {
-  transform: scale(1.04); 
-}
-
-.card-icon-fallback img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-  opacity: 0.8;
 }

@@ -1,5 +1,6 @@
 <template>
   <div class="home-root">
+    
     <section class="card hero-card" aria-labelledby="hero-title">
       <div class="hero-left">
         <h3 id="hero-title">Cos'è <span class="brand-text">Antispreco</span>?</h3>
@@ -20,20 +21,20 @@
         </p>
       </div>
 
-     <div class="hero-right">
-  <div class="carousel-track-container">
-    <div class="carousel-track">
-      <div class="carousel-slide"><img src="@/assets/images/pomodorini.webp" alt="Pomodorini" /></div>
-      <div class="carousel-slide"><img src="@/assets/images/buste_cibo.webp" alt="Buste cibo" /></div>
-      <div class="carousel-slide"><img src="@/assets/images/donazione.webp" alt="Donazione" /></div>
-      <div class="carousel-slide"><img src="@/assets/images/unione.webp" alt="Unione" /></div>
-      <div class="carousel-slide"><img src="@/assets/images/pomodorini.webp" alt="Pomodorini" /></div>
-      <div class="carousel-slide"><img src="@/assets/images/buste_cibo.webp" alt="Buste cibo" /></div>
-      <div class="carousel-slide"><img src="@/assets/images/donazione.webp" alt="Donazione" /></div>
-      <div class="carousel-slide"><img src="@/assets/images/unione.webp" alt="Unione" /></div>
-    </div>
-  </div>
-</div> 
+      <div class="hero-right">
+        <div class="carousel-track-container">
+          <div class="carousel-track">
+            <div class="carousel-slide"><img src="@/assets/images/pomodorini.webp" alt="Pomodorini" /></div>
+            <div class="carousel-slide"><img src="@/assets/images/buste_cibo.webp" alt="Buste cibo" /></div>
+            <div class="carousel-slide"><img src="@/assets/images/donazione.webp" alt="Donazione" /></div>
+            <div class="carousel-slide"><img src="@/assets/images/unione.webp" alt="Unione" /></div>
+            <div class="carousel-slide"><img src="@/assets/images/pomodorini.webp" alt="Pomodorini" /></div>
+            <div class="carousel-slide"><img src="@/assets/images/buste_cibo.webp" alt="Buste cibo" /></div>
+            <div class="carousel-slide"><img src="@/assets/images/donazione.webp" alt="Donazione" /></div>
+            <div class="carousel-slide"><img src="@/assets/images/unione.webp" alt="Unione" /></div>
+          </div>
+        </div>
+      </div> 
     </section>
 
     <section class="home-section steps-section">
@@ -57,7 +58,7 @@
       </div>
     </section>
 
-    <section class="home-section stats-section card">
+    <section class="home-section stats-section">
       <h2 class="section-title">Il nostro impatto collettivo 🌍</h2>
       <div class="stats-grid">
         <div class="stat-item">
@@ -74,6 +75,7 @@
         </div>
       </div>
     </section>
+
   </div>
 </template>
 
