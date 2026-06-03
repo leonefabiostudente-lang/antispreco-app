@@ -15,7 +15,7 @@ let userPos = ref(null);
 // 📌 Nuove icone coordinate, moderne e minimali per categoria
 const icons = {
   pane: "https://cdn-icons-png.flaticon.com/512/3081/3081918.png",         /* Pane moderno flat */
-  dolci: "https://cdn-icons-png.flaticon.com/512/2682/2682448.png",        /* Cupcake/Dolce coordinato */
+  dolci: "https://cdn-icons-png.flaticon.com/512/3063/3063177.png",        /* Cupcake/Dolce coordinato */
   frutta: "https://cdn-icons-png.flaticon.com/512/3194/3194766.png",       /* Mela/Frutta minimal */
   verdura: "https://cdn-icons-png.flaticon.com/512/2324/2324343.png",      /* Carota/Verdura minimal */
   pasti_pronti: "https://cdn-icons-png.flaticon.com/512/3448/3448601.png", /* Piatto pronto/Cloche */
@@ -32,11 +32,13 @@ function getIcon(categoria) {
     popupAnchor: [0, -38]
   });
 }
-// ⭐ AGGIUNGI QUESTA FUNZIONE
 function getFallbackIcon(categoria) {
   if (!categoria) return icons.altro;
-  // Normalizza per evitare errori di case-sensitivity
   const catKey = categoria.toLowerCase().trim();
+  
+  // Debug: controlla cosa sta cercando
+  console.log("Cerco icona per categoria:", catKey, "Risultato:", icons[catKey]);
+  
   return icons[catKey] || icons.altro;
 }
 
