@@ -49,19 +49,3 @@ function toggleDarkMode() {
   document.body.classList.toggle('dark-mode', dark.value);
 }
 </script>
-
-
-<script setup>
-import { ref } from 'vue';
-
-const dark = ref(false);
-const open = ref(false);
-
-
-const isLogged = ref(!!localStorage.getItem("token"));
-
-function toggleDarkMode() {
-  dark.value = !dark.value;
-  document.body.classList.toggle('dark-mode', dark.value);
-}
-</script>
