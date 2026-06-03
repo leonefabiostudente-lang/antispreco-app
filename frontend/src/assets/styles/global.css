@@ -299,38 +299,39 @@ input, select, textarea {
 }
 
 /* -------------------------------------------------------
-   8) HOME HERO – SLIDER A CAROSELLO (Ottimizzato)
-------------------------------------------------------- */
-/* -------------------------------------------------------
-   8) HOME HERO – SLIDER A CAROSELLO (Ancorato a Destra)
+   8) HOME HERO – SLIDER A CAROSELLO (Centrato e Bilanciato)
 ------------------------------------------------------- */
 .hero-card {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Allinea gli elementi partendo da sinistra */
+  justify-content: center; /* Centra il contenuto globalmente */
   gap: 40px;
   padding: 40px;
   width: 100%;
 }
 
 .hero-left {
-  flex: 1; /* Forza il testo a espandersi e occupare TUTTO lo spazio disponibile */
-  /* Rimuoviamo temporaneamente il max-width per permettergli di spingere il carosello */
+  flex: 1;
+  max-width: 500px; /* Stringe leggermente il testo per farlo respirare */
 }
 
-/* Il contenitore del carosello – Ora ancorato al 100% a destra */
+/* Il contenitore del carosello – Ora perfettamente centrato nel suo blocco */
 .hero-right {
   width: 440px;
+  height: 240px; /* Allineato all'altezza delle slide */
   overflow: hidden;
   position: relative;
   border-radius: var(--radius);
-  flex-shrink: 0; /* Impedisce al carosello di rimpicciolirsi */
-  margin-left: auto; /* IMPORTANTE: Spinge il carosello sulSource assoluto del bordo destro */
+  flex-shrink: 0;
+  margin-left: 0; /* Rimuove la spinta a destra di prima */
+  display: flex;
+  justify-content: center; /* Centra le immagini al suo interno */
 }
 
 .carousel-track-container {
   width: 100%;
   display: flex;
+  justify-content: center;
 }
 
 .carousel-track {
@@ -374,12 +375,16 @@ input, select, textarea {
   .hero-card {
     flex-direction: column;
     padding: 24px;
+    text-align: center; /* Centra anche il testo su mobile */
+  }
+  .hero-links {
+    justify-content: center; /* Centra i bottoni su mobile */
   }
   .hero-right {
     width: 100%;
-    margin-left: 0;
   }
-}/* -------------------------------------------------------
+}
+/* -------------------------------------------------------
    9) LOGIN, 10) REGISTER, 11) ANNUNCI
 ------------------------------------------------------- */
 .login-wrapper { max-width: 420px; margin: 80px auto; padding: 32px; }
