@@ -209,7 +209,7 @@ watch(filtroZona, () => {
           class="prodotto-real-img"
         />
         <div v-else class="card-icon-fallback">
-          <img :src="icons[a.categoria] || icons.altro" alt="categoria" />
+          <img :src="getFallbackIcon(a.categoria)" alt="categoria" />
         </div>
       </div>
 

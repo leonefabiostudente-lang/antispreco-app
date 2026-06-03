@@ -181,6 +181,11 @@ function selezionaSuggerimento(item) {
   lng.value = item.lon;
   suggerimenti.value = [];
 }
+// Aggiungi questa funzione helper per normalizzare la visualizzazione
+function getCategoriaClass(cat) {
+  if (!cat) return 'altro';
+  return cat.toLowerCase().trim();
+}
 
 async function inviaAnnuncio() {
   if (!token) {
@@ -193,7 +198,8 @@ async function inviaAnnuncio() {
     alert("Seleziona una zona dai suggerimenti per ottenere la posizione esatta.");
     return;
   }
-
+console.log("Valore di categoria selezionato:", categoria.value);
+  console.log("Tipo di dato:", typeof categoria.value);
   const nuovoAnnuncio = {
     titolo: titolo.value,
     descrizione: descrizione.value,
