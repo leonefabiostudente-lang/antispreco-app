@@ -439,3 +439,40 @@ input, select, textarea {
   color: #64748b;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
+
+/* -------------------------------------------------------
+   14) BACHECA ANNUNCI – CARD E IMMAGINI PRODOTTI
+------------------------------------------------------- */
+.card-media-wrapper {
+  width: 100%;
+  height: 180px; 
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-container.dark-mode .card-media-wrapper {
+  background-color: #1e293b;
+}
+
+.prodotto-real-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  transition: transform 0.3s ease;
+}
+
+.annuncio-card:hover .prodotto-real-img {
+  transform: scale(1.04); 
+}
+
+.card-icon-fallback img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  opacity: 0.8;
+}

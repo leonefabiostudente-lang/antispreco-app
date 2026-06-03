@@ -55,6 +55,7 @@ export const getAnnunci = async (req, res) => {
     if (req.query.zona) {
       filtro.zona = { $regex: req.query.zona, $options: "i" };
     }
+    // Recupera gli annunci (Mongoose includerà automaticamente il campo foto)
     const annunci = await Annuncio.find(filtro);
     res.json(annunci);
   } catch (err) {
@@ -67,7 +68,7 @@ export const getAnnunci = async (req, res) => {
 --------------------------------------------- */
 export const creaAnnuncio = async (req, res) => {
   try {
-    const { zona, lat, lng } = req.body;
+    const { zona, lat, lng, foto } = req.body;
 
     if (!zona || !zona.trim()) {
       return res.status(400).json({
@@ -94,13 +95,25 @@ export const creaAnnuncio = async (req, res) => {
       longitudine = coords.lon;
     }
 
+    // ⭐ GESTIONE STRUTTURA FOTO IN BASE64
+    // Ci assicuriamo che il campo foto sia salvato come array di stringhe coerente con il Model
+    let listaFoto = [];
+    if (foto) {
+      if (Array.isArray(foto)) {
+        listaFoto = foto; // È già un array, lo teniamo così
+      } else if (typeof foto === "string" && foto.trim() !== "") {
+        listaFoto = [foto]; // È una stringa singola, la avvolgiamo in un array
+      }
+    }
+
     const nuovoAnnuncio = new Annuncio({
       ...req.body,
       categoria: normalizeCategoria(req.body.categoria),
       utente_id: req.utente.id,
       nome_utente: req.utente.nome,
       latitudine,
-      longitudine
+      longitudine,
+      foto: listaFoto // <--- Sovrascriviamo con l'array normalizzato e sicuro
     });
 
     await nuovoAnnuncio.save();

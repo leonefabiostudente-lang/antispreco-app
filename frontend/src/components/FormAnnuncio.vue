@@ -2,13 +2,11 @@
   <div class="form-container">
     <h2 class="page-title">Pubblica un nuovo annuncio!</h2>
 
-    <!-- BLOCCO SE NON LOGGATO -->
     <div v-if="!token" class="auth-alert">
       <p>Devi essere registrato per pubblicare un annuncio.</p>
       <router-link to="/login" class="login-link">Vai al login</router-link>
     </div>
 
-    <!-- FORM FORMATTATO COME NUOVOANNUNCIO -->
     <form v-else class="form-box" @submit.prevent="inviaAnnuncio">
       
       <select v-model="categoria" required>
@@ -28,10 +26,8 @@
 
       <input v-model="quantita" type="text" placeholder="Quantità (es: 1 teglia, 2 kg)" required />
 
-      <!-- CAMPO TELEFONO -->
       <input v-model="telefono" type="tel" placeholder="Numero di telefono" required />
 
-      <!-- ZONA CON AUTOCOMPLETAMENTO -->
       <div class="autocomplete-container">
         <input 
           v-model="zona" 
@@ -67,6 +63,30 @@
         </div>
       </div>
 
+      <div class="datetime-group">
+        <label>Foto del prodotto (Opzionale):</label>
+        <input 
+          type="file" 
+          accept="image/*" 
+          @change="gestisciCaricamentoFoto" 
+        />
+        
+        <div v-if="anteprimaFoto" class="foto-anteprima-container" style="margin-top: 15px; text-align: center;">
+          <img 
+            :src="anteprimaFoto" 
+            alt="Anteprima" 
+            style="max-width: 100%; max-height: 180px; border-radius: 8px; border: 2px dashed var(--accent);" 
+          />
+          <button 
+            type="button" 
+            @click="rimuoviFoto" 
+            style="display: block; margin: 10px auto 0 auto; background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;"
+          >
+            Rimuovi foto
+          </button>
+        </div>
+      </div>
+
       <button type="submit">Pubblica</button>
     </form>
   </div>
@@ -91,13 +111,43 @@ const data_scadenza = ref("");
 const orario_ritiro_inizio = ref("");
 const orario_ritiro_fine = ref("");
 
-// Coordinate (UNA SOLA dichiarazione!)
+// ⭐ Reattivi dedicati alla gestione della foto Base64
+const fotoBase64 = ref("");
+const anteprimaFoto = ref("");
+
+// Coordinate
 const lat = ref("");
 const lng = ref("");
 
 // Autocompletamento OpenStreetMap
 const suggerimenti = ref([]);
 let debounceTimer = null;
+
+// ⭐ Funzione per leggere il file e convertirlo in stringa Base64
+function gestisciCaricamentoFoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Limite di sicurezza preventivo sul frontend (es: 4MB) per preservare le performance del DB
+  if (file.size > 4 * 1024 * 1024) {
+    alert("L'immagine è troppo pesante! Seleziona una foto inferiore a 4MB.");
+    event.target.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    fotoBase64.value = reader.result;    // Stringa Base64 ufficiale per il Backend
+    anteprimaFoto.value = reader.result; // Stringa per l'anteprima a schermo
+  };
+  reader.readAsDataURL(file);
+}
+
+// ⭐ Funzione per rimuovere la foto selezionata
+function rimuoviFoto() {
+  fotoBase64.value = "";
+  anteprimaFoto.value = "";
+}
 
 function cercaZona() {
   clearTimeout(debounceTimer);
@@ -153,7 +203,9 @@ async function inviaAnnuncio() {
     lng: lng.value,
     data_scadenza: data_scadenza.value,
     orario_ritiro_inizio: orario_ritiro_inizio.value,
-    orario_ritiro_fine: orario_ritiro_fine.value
+    orario_ritiro_fine: orario_ritiro_fine.value,
+    // ⭐ Inviamo il Base64 al backend (verrà catturato e normalizzato in array nel controller)
+    foto: fotoBase64.value 
   };
 
   try {

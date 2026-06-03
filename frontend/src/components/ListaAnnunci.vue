@@ -12,7 +12,7 @@ let map;
 let markers = [];
 let userPos = ref(null);
 
-// 📌 Icone per categoria
+// 📌 Icone per categoria (usate come ripiego se manca la foto)
 const icons = {
   pane: "https://cdn-icons-png.flaticon.com/512/1046/1046786.png",
   dolci: "https://cdn-icons-png.flaticon.com/512/2203/2203189.png",
@@ -23,8 +23,7 @@ const icons = {
   altro: "https://cdn-icons-png.flaticon.com/512/565/565547.png"
 };
 
-// 🔧 Funzione per ottenere l’icona giusta
-
+// 🔧 Funzione per ottenere l’icona giusta sulla mappa
 function getIcon(categoria) {
   return L.icon({
     iconUrl: icons[categoria] || icons.altro,
@@ -126,7 +125,7 @@ onMounted(() => {
   caricaAnnunci();
 });
 
-// 🎯 Aggiorna marker
+// 🎯 Aggiorna marker sulla mappa
 watch(annunci, () => {
   markers.forEach(m => map.removeLayer(m));
   markers = [];
@@ -138,11 +137,19 @@ watch(annunci, () => {
         { icon: getIcon(a.categoria) }
       ).addTo(map);
 
+      // ⭐ Aggiunta foto anche nel mini popup della mappa se disponibile!
+      const popupPhotoHtml = a.foto && a.foto.length > 0 && a.foto[0]
+        ? `<img src="${a.foto[0]}" style="width:100%; max-height:80px; object-fit:cover; border-radius:4px; margin-bottom:5px;" /><br>`
+        : "";
+
       marker.bindPopup(`
-        <b>${a.titolo}</b><br>
-        ${a.zona}<br>
-        <i>${a.categoria}</i><br>
-        ${a.distanza ? a.distanza.toFixed(1) + " km da te" : ""}
+        <div style="max-width: 160px;">
+          ${popupPhotoHtml}
+          <b>${a.titolo}</b><br>
+          ${a.zona}<br>
+          <i>${a.categoria}</i><br>
+          ${a.distanza ? a.distanza.toFixed(1) + " km da te" : ""}
+        </div>
       `);
 
       markers.push(marker);
@@ -175,12 +182,19 @@ watch(filtroZona, () => {
     Nessun annuncio presente.
   </div>
 
-  <!-- ⭐ NUOVA GRIGLIA MODERNA -->
   <div class="annunci-grid">
     <div v-for="a in annunci" :key="a._id" class="annuncio-card">
       
-      <div class="card-icon">
-        <img :src="icons[a.categoria] || icons.altro" alt="categoria" />
+      <div class="card-media-wrapper">
+        <img 
+          v-if="a.foto && a.foto.length > 0 && a.foto[0]" 
+          :src="a.foto[0]" 
+          alt="Foto prodotto" 
+          class="prodotto-real-img"
+        />
+        <div v-else class="card-icon-fallback">
+          <img :src="icons[a.categoria] || icons.altro" alt="categoria" />
+        </div>
       </div>
 
       <h3 class="card-title">{{ a.titolo }}</h3>
@@ -216,3 +230,43 @@ watch(filtroZona, () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* ⭐ REGOLE DI STILE PER LE IMMAGINI DELLE CARD 
+   Inseriscile nel tag style di questa pagina o nel tuo global.css */
+.card-media-wrapper {
+  width: 100%;
+  height: 180px; /* Altezza fissa uniforme per tutta la griglia */
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-container.dark-mode .card-media-wrapper {
+  background-color: #1e293b;
+}
+
+/* Stile foto reale */
+.prodotto-real-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ritaglia l'immagine senza deformarla */
+  transition: transform 0.3s ease;
+}
+
+.annuncio-card:hover .prodotto-real-img {
+  transform: scale(1.04); /* Piccolo effetto dinamico all'hover sulla card */
+}
+
+/* Stile per l'icona di ripiego (se manca la foto) */
+.card-icon-fallback img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  opacity: 0.8;
+}
+</style>
