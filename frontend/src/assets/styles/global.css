@@ -110,6 +110,28 @@ body.dark-mode,
 }
 
 
+/* Quando il menu hamburger è aperto, anche su schermi larghi */
+.nav-links.open {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.nav-links.open a {
+  display: block;
+  padding: 12px 0;
+  margin: 4px 0;
+  font-size: 15px;
+}
+
+.app-container.dark-mode .nav-links.open {
+  background: #111827;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
 
 
 /* -------------------------------------------------------
